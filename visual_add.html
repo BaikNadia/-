@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Камень, Ножницы, Бумага, Ящерица, Спок</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    #game-container {
+      margin: 20px auto;
+      padding: 20px;
+      width: 350px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Камень, Ножницы, Бумага, Ящерица, Спок</h1>
+  <div id="game-container">
+    <p>Счёт:</p>
+    <p><span id="player-score">0</span> : <span id="computer-score">0</span></p>
+    <div>
+      <button onclick="play('камень')">Камень</button>
+      <button onclick="play('ножницы')">Ножницы</button>
+      <button onclick="play('бумага')">Бумага</button>
+      <button onclick="play('ящерица')">Ящерица</button>
+      <button onclick="play('спок')">Спок</button>
+    </div>
+    <div class="result" id="result"></div>
+    <button onclick="resetGame()" style="margin-top: 10px; background-color: red; color: white;">
+      Завершить игру
+    </button>
+  </div>
+
+  <script>
+    // Счёт игрока и компьютера
+    let playerScore = 0;
+    let computerScore = 0;
+
+    // Функция для случайного выбора компьютера
+    function getComputerChoice() {
+      const choices = ["камень", "ножницы", "бумага", "ящерица", "спок"];
+      return choices[Math.floor(Math.random() * choices.length)];
+    }
+
+    // Основная функция игры
+    function play(playerChoice) {
+      const computerChoice = getComputerChoice();
+      const resultDiv = document.getElementById("result");
+
+      // Правила игры
+      if (playerChoice === computerChoice) {
+        resultDiv.textContent = `Ничья! Компьютер тоже выбрал ${computerChoice}.`;
+      } else {
+        const winRules = {
+          "камень": ["ножницы", "ящерица"],
+          "ножницы": ["бумага", "ящерица"],
+          "бумага": ["камень", "спок"],
+          "ящерица": ["спок", "бумага"],
+          "спок": ["ножницы", "камень"]
+        };
+
+        if (winRules[playerChoice].includes(computerChoice)) {
+          playerScore++;
+          updateScores();
+          resultDiv.textContent = `Вы выиграли! Компьютер выбрал ${computerChoice}.`;
+        } else {
+          computerScore++;
+          updateScores();
+          resultDiv.textContent = `Вы проиграли! Компьютер выбрал ${computerChoice}.`;
+        }
+      }
+    }
+
+    // Обновление счёта на экране
+    function updateScores() {
+      document.getElementById("player-score").textContent = playerScore;
+      document.getElementById("computer-score").textContent = computerScore;
+    }
+
+    // Сброс игры
+    function resetGame() {
+      const finalResult = `Игра завершена!\nОбщий счёт:\nВы: ${playerScore}\nКомпьютер: ${computerScore}`;
+      alert(finalResult);
+
+      // Сброс счёта
+      playerScore = 0;
+      computerScore = 0;
+      updateScores();
+      document.getElementById("result").textContent = "";
+    }
+  </script>
+</body>
+</html>
